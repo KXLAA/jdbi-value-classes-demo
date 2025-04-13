@@ -3,6 +3,8 @@ package com.library.demo.entity;
 import org.jdbi.v3.spring.JdbiRepository;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindMethods;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -22,4 +24,11 @@ public interface BookRepo {
 
     @SqlUpdate("DELETE FROM book WHERE id = :id")
     void deleteById(@Bind("id") BookId id);
+
+    @SqlUpdate("""
+        INSERT INTO book (title, author, publisher, isbn, published_date)
+        VALUES (:title, :author, :publisher, :isbn, :publishedDate)
+""")
+    @GetGeneratedKeys("id")
+    BookId save(@BindMethods BookCreateRequest book);
 }

@@ -3,6 +3,8 @@ package com.library.demo.entity;
 import org.jdbi.v3.spring.JdbiRepository;
 import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
 import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.customizer.BindMethods;
+import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
@@ -25,4 +27,8 @@ public interface LibraryRepo {
             @Bind("libraryId") LibraryId libraryId,
             @Bind("bookId") BookId bookId
     );
+
+    @SqlUpdate("INSERT INTO library (name, description) VALUES (:name, :description)")
+    @GetGeneratedKeys("id")
+    BookId save(@BindMethods LibraryCreateRequest book);
 }
